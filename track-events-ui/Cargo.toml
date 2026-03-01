@@ -1,0 +1,13 @@
+[package]
+name = "track-events_ui"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+description = "Habits tracking app"
+
+[dependencies]
+# Enable `gettext` feature if you need localization. Read about localizing slint apps here: https://docs.slint.dev/latest/docs/slint/guide/development/translations/
+slint = { version = "1.14", features = [] }
+
+[build-dependencies]
+slint-build = "1.14"

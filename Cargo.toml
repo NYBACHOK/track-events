@@ -1,0 +1,14 @@
+[workspace]
+members = [ 
+    "track-events-ui"
+]
+resolver = "2"
+
+[workspace.dependencies]
+
+[workspace.lints.rust]
+rust_2018_idioms = "deny"
+# missing_docs = "deny"
+missing_debug_implementations = "deny" # opt out where Debug is really redundant
+future_incompatible = "deny"
+unsafe-code = "deny"
