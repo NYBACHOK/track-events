@@ -1,0 +1,8 @@
+CREATE TABLE events (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    svg_icon TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    edited_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    sub_event_id INTEGER
+);

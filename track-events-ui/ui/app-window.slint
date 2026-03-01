@@ -1,17 +1,75 @@
-import { Button, VerticalBox } from "std-widgets.slint";
+import { Button, VerticalBox, ScrollView } from "std-widgets.slint";
 
-export component AppWindow inherits Window {
-    in-out property <int> counter: 42;
-    callback request-increase-value();
+struct EventData {
+    id : int,
+    name: string,
+    icon: image,
+}
+
+export component App inherits Window {
+    width: 400px;
+    height: 500px;
+    title: "Event Viewer";
+    background: #f4f4f9;
+
+    in property <[EventData]> events;
+
+    callback event-clicked(string);
+
     VerticalBox {
-        Text {
-            text: "Counter: \{root.counter}";
-        }
+        alignment: start;
+        spacing: 10px;
 
-        Button {
-            text: "Increase value";
-            clicked => {
-                root.request-increase-value();
+        ScrollView {
+            height: 100%;
+            width: 100%;
+
+            VerticalLayout {
+                spacing: 8px;
+                padding-bottom: 10px;
+
+                for event in root.events: Rectangle {
+                    height: 60px;
+                    background: white;
+                    border-radius: 8px;
+                    drop-shadow-blur: 4px;
+                    drop-shadow-color: #00000015;
+
+                    HorizontalLayout {
+                        padding: 12px;
+                        spacing: 15px;
+                        alignment: start;
+
+                        Image {
+                            source: event.icon;
+                            width: 32px;
+                            height: 32px;
+                            image-fit: contain;
+                            colorize: #4A90E2;
+                        }
+
+                        Text {
+                            text: event.name;
+                            vertical-alignment: center;
+                            font-size: 16px;
+                            color: #222;
+                        }
+                    }
+
+                    states [
+                        hover when touch.has-hover: {
+                            background: #eee;
+                        }
+                        pressed when touch.pressed: {
+                            background: #e0e0e0;
+                        }
+                    ]
+                    touch := TouchArea {
+                        clicked => {
+                            root.event-clicked(event.id);
+                        }
+                    }
+                }
             }
         }
     }
