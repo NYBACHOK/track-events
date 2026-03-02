@@ -7,28 +7,31 @@ struct EventData {
 }
 
 export component App inherits Window {
-    width: 400px;
-    height: 500px;
+    width: 450px;
+    height: 600px;
     title: "Event Viewer";
     background: #f4f4f9;
 
     in property <[EventData]> events;
+    callback event-clicked(int);
 
-    callback event-clicked(string);
+    ScrollView {
+        width: 100%;
+        height: 100%;
 
-    VerticalBox {
-        alignment: start;
-        spacing: 10px;
+        GridLayout {
+            spacing: 8px;
+            padding: 10px;
 
-        ScrollView {
-            height: 100%;
-            width: 100%;
-
-            VerticalLayout {
-                spacing: 8px;
-                padding-bottom: 10px;
-
-                for event in root.events: Rectangle {
+            // 1. Loop through data
+            for event[i] in root.events : VerticalLayout {
+                // 2. Set grid position on the container
+                row: Math.floor(i / 3);
+                col: Math.mod(i, 3);
+                
+                // 3. Your visual element inside the container
+                Rectangle {
+                    width: 140px;
                     height: 60px;
                     background: white;
                     border-radius: 8px;
@@ -51,8 +54,9 @@ export component App inherits Window {
                         Text {
                             text: event.name;
                             vertical-alignment: center;
-                            font-size: 16px;
+                            font-size: 14px;
                             color: #222;
+                            overflow: elide;
                         }
                     }
 
