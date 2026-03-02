@@ -1,14 +1,9 @@
+mod app_state;
 mod core;
 mod database;
-use std::{
-    path::PathBuf,
-    rc::Rc,
-    sync::{Arc, LazyLock},
-};
+use std::{path::PathBuf, sync::LazyLock};
 
-use slint::{Image, ModelRc, ToSharedString, VecModel};
-
-use crate::database::events::RawEvent;
+use crate::app_state::AppState;
 
 mod commands;
 mod setup;
@@ -40,39 +35,21 @@ static APP_DATA_DIR: LazyLock<PathBuf> = LazyLock::new(|| {
 pub fn start() -> anyhow::Result<()> {
     let db_pool = TOKIO_RUNTIME.block_on(setup::pre_start_setup())?;
 
-    let ui = App::new()?;
+    let app_state = AppState::new(db_pool);
 
-    TOKIO_RUNTIME.block_on({
-        let ui = ui.clone_strong();
+    let app = App::new()?;
 
-        async move {
-            let mut connection = db_pool.acquire().await.unwrap();
+    let (tx, rx) = tokio::sync::mpsc::unbounded_channel();
 
-            let db_events = database::events::events(&mut connection, 0, 100)
-                .await
-                .unwrap();
+    commands::handle_commands(app.clone_strong(), tx);
 
-            let events: Vec<EventData> = db_events
-                .into_iter()
-                .map(
-                    |RawEvent {
-                         id, name, svg_icon, ..
-                     }| EventData {
-                        icon: Image::load_from_svg_data(
-                            &data_encoding::BASE64.decode(svg_icon.as_bytes()).unwrap(),
-                        )
-                        .unwrap(),
-                        id,
-                        name: name.to_shared_string(),
-                    },
-                )
-                .collect();
+    core::start_command_loop(rx, app_state);
 
-            ui.set_events(ModelRc::new(Rc::new(VecModel::from(events))));
-        }
-    });
+    tracing::info!("starting app");
 
-    ui.run()?;
+    app.invoke_request_events();
+
+    app.run()?;
 
     Ok(())
 }
