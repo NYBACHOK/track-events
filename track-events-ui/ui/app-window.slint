@@ -4,6 +4,7 @@ struct EventData {
     id : int,
     name: string,
     icon: image,
+    occurrence_count : int,
 }
 
 export component App inherits Window {
@@ -52,12 +53,19 @@ export component App inherits Window {
                             colorize: #4A90E2;
                         }
 
-                        Text {
-                            text: event.name;
-                            vertical-alignment: center;
-                            font-size: 14px;
-                            color: #222;
-                            overflow: elide;
+                        VerticalLayout {
+                            alignment: center;
+                            Text {
+                                text: event.name;
+                                font-size: 14px;
+                                color: #222;
+                                overflow: elide;
+                            }
+                            Text {
+                                text: event.occurrence_count;
+                                font-size: 10px;
+                                color: #666;
+                            }
                         }
                     }
 

@@ -13,4 +13,12 @@ pub fn handle_commands(app: App, app_tx: UnboundedSender<Commands>) {
             let _ = app_tx.send(Commands::Events(EventCommands::List(0)));
         }
     });
+
+    app.on_event_clicked({
+        let app_tx = app_tx.clone();
+
+        move |id| {
+            let _ = app_tx.send(Commands::Events(EventCommands::Clicked(id as u32)));
+        }
+    });
 }
