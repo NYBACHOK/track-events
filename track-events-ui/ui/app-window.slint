@@ -7,7 +7,7 @@ struct EventData {
 }
 
 export component App inherits Window {
-    width: 450px;
+    width: 460px;
     height: 600px;
     title: "Event Viewer";
     background: #f4f4f9;
@@ -15,8 +15,6 @@ export component App inherits Window {
     in property <[EventData]> events;
     callback event-clicked(int);
     callback request-events();
-
-   
 
     ScrollView {
         width: 100%;
