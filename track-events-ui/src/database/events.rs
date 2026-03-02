@@ -10,8 +10,8 @@ pub struct RawEvent {
 
 pub async fn events(
     mut e: impl AsMut<sqlx::SqliteConnection>,
-    offset: i32,
-    limit: i32,
+    offset: u32,
+    limit: usize,
 ) -> Result<Vec<RawEvent>, sqlx::Error> {
     let query = format!(
         r#"SELECT id, name, svg_icon, created_at, edited_at, sub_event_id FROM events e ORDER BY e.name LIMIT {} OFFSET {}"#,

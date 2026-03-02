@@ -43,7 +43,7 @@ pub fn start() -> anyhow::Result<()> {
 
     commands::handle_commands(app.clone_strong(), tx);
 
-    core::start_command_loop(rx, app_state);
+    core::start_command_loop(rx, app_state, app.as_weak());
 
     tracing::info!("starting app");
 

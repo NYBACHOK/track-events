@@ -1,67 +1,60 @@
-use slint::{Image, ToSharedString};
+use std::rc::Rc;
+
+use slint::{Image, ModelRc, ToSharedString, VecModel, Weak};
 
 use crate::{
-    EventData,
+    App, EventData,
     app_state::AppState,
     database::{self, events::RawEvent},
 };
 
+const ELEMENTS_LIMIT: usize = 100;
+
 #[derive(Debug)]
 pub enum EventCommands {
-    List(tokio::sync::oneshot::Sender<Vec<Event>>),
+    List(u32),
 }
 
-#[derive(Debug)]
-pub struct Event {
-    pub id: i32,
-    pub icon: Vec<u8>,
-    pub name: String,
-}
+impl TryFrom<RawEvent> for EventData {
+    type Error = anyhow::Error;
 
-impl From<Event> for EventData {
-    fn from(Event { id, icon, name }: Event) -> Self {
-        Self {
-            icon: Image::load_from_svg_data(&icon).expect("always valid"),
-            id,
-            name: name.to_shared_string(),
-        }
-    }
-}
-
-impl From<RawEvent> for Event {
-    fn from(
+    fn try_from(
         RawEvent {
             id, name, svg_icon, ..
         }: RawEvent,
-    ) -> Self {
-        Self {
+    ) -> Result<Self, Self::Error> {
+        Ok(Self {
+            icon: Image::load_from_svg_data(&data_encoding::BASE64.decode(svg_icon.as_bytes())?)?,
             id,
-            icon: data_encoding::BASE64
-                .decode(svg_icon.as_bytes())
-                .expect("always valid"),
-            name,
-        }
+            name: name.to_shared_string(),
+        })
     }
 }
 
-pub(super) async fn handle(cmd: EventCommands, state: &AppState) -> anyhow::Result<()> {
+pub(super) async fn handle(
+    cmd: EventCommands,
+    state: &AppState,
+    app: Weak<App>,
+) -> anyhow::Result<()> {
     match cmd {
-        EventCommands::List(callback) => {
-            let _ = callback.send(list(&state.pool).await?);
-        }
-    };
-
-    Ok(())
+        EventCommands::List(offset) => list(&state.pool, app, offset).await,
+    }
 }
 
-async fn list(pool: &sqlx::SqlitePool) -> anyhow::Result<Vec<Event>> {
+pub async fn list(pool: &sqlx::SqlitePool, app: Weak<App>, offset: u32) -> anyhow::Result<()> {
     let connection = pool.acquire().await?;
 
-    let events = database::events::events(connection, 0, 100)
-        .await?
-        .into_iter()
-        .map(From::from)
-        .collect();
+    let events = database::events::events(connection, offset, ELEMENTS_LIMIT).await?;
 
-    Ok(events)
+    let _ = app.upgrade_in_event_loop(move |app| {
+        // You want believe, but EventData is not sync and you need to perform map on ui thread
+        let events = events
+            .into_iter()
+            .filter_map(|this| TryFrom::try_from(this).ok())
+            .collect::<Vec<EventData>>();
+
+        let _ = app.set_events(ModelRc::new(Rc::new(VecModel::from(events))));
+    });
+
+    Ok(())
 }
