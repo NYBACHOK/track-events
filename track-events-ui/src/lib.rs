@@ -47,8 +47,6 @@ pub fn start() -> anyhow::Result<()> {
 
     tracing::info!("starting app");
 
-    app.invoke_request_events();
-
     app.run()?;
 
     Ok(())

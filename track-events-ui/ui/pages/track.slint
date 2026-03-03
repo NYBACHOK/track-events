@@ -1,10 +1,12 @@
 import { ScrollView } from "std-widgets.slint";
 
 import { EventData } from "../types.slint";
+import { AppLogic } from "../logic.slint";
 
 export component TrackPage inherits Rectangle {
-    in property <[EventData]> events;
-    callback event-clicked(int);
+    init => {
+        AppLogic.request-events();
+    }
 
     private property <int> cols: Math.max(1, Math.floor(root.width / 160px));
 
@@ -14,7 +16,7 @@ export component TrackPage inherits Rectangle {
             padding: 10px;
             spacing: 12px;
 
-            for event[i] in root.events: VerticalLayout {
+            for event[i] in AppLogic.events: VerticalLayout {
 
                 row: Math.floor(i / root.cols);
                 col: Math.mod(i, root.cols);
@@ -65,7 +67,7 @@ export component TrackPage inherits Rectangle {
                     ]
                     touch := TouchArea {
                         clicked => {
-                            root.event-clicked(event.id);
+                            AppLogic.event-clicked(event.id);
                         }
                     }
                 }

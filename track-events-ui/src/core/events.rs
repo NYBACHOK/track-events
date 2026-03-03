@@ -1,9 +1,9 @@
 use std::rc::Rc;
 
-use slint::{Image, Model, ModelRc, ToSharedString, VecModel, Weak};
+use slint::{ComponentHandle, Image, Model, ModelRc, ToSharedString, VecModel, Weak};
 
 use crate::{
-    App, EventData,
+    App, AppLogic, EventData,
     app_state::AppState,
     database::{self, events::RawEvent},
 };
@@ -60,7 +60,9 @@ pub async fn list(pool: &sqlx::SqlitePool, app: Weak<App>, offset: u32) -> anyho
             .filter_map(|this| TryFrom::try_from(this).ok())
             .collect::<Vec<EventData>>();
 
-        let _ = app.set_events(ModelRc::new(Rc::new(VecModel::from(events))));
+        let _ = app
+            .global::<AppLogic>()
+            .set_events(ModelRc::new(Rc::new(VecModel::from(events))));
     });
 
     Ok(())
@@ -70,7 +72,7 @@ pub async fn clicked(pool: &sqlx::SqlitePool, app: Weak<App>, id: u32) -> anyhow
     database::events::event_occurrence_create(pool.acquire().await?, id).await?;
 
     let _ = app.upgrade_in_event_loop(move |app| {
-        let model = app.get_events();
+        let model = app.global::<AppLogic>().get_events();
 
         for (i, mut event) in model.iter().enumerate() {
             if event.id as u32 == id {

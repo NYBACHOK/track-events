@@ -1,12 +1,18 @@
 import { ScrollView, VerticalBox } from "std-widgets.slint";
 
 import { EventData } from "types.slint";
-
 import { TabItem } from "elements/tab_item.slint";
- 
-import { TrackPage } from "pages/track.slint";
+import {
+    TrackPage,
+    SettingsPage,
+    LibraryPage,
+    InsightsPage,
+} from "pages/pages.slint";
+import { AppLogic } from "logic.slint";
 
-  enum AppPage { Library, Track, Insights, Settings }
+export { AppLogic }
+
+enum AppPage { Library, Track, Insights, Settings }
 
 export component App inherits Window {
     min-width: 320px;
@@ -15,9 +21,6 @@ export component App inherits Window {
     preferred-height: 600px;
     title: "Event Tracker";
     background: #f4f4f9;
-    in property <[EventData]> events;
-    callback event-clicked(int);
-    callback request-events();
 
     // Navigation State (Default to index 1: Track)
     private property <AppPage> active-tab: AppPage.Track;
@@ -25,21 +28,10 @@ export component App inherits Window {
     VerticalLayout {
         Rectangle {
             vertical-stretch: 1;
-            if (active-tab == AppPage.Library): Text {
-                text: "Library Page";
-            }
-            if (active-tab == AppPage.Track): TrackPage {
-                events: root.events;
-                event-clicked(id) => {
-                    root.event-clicked(id)
-                }
-            }
-            if (active-tab == AppPage.Insights): Text {
-                text: "Insights Page";
-            }
-            if (active-tab == AppPage.Settings): Text {
-                text: "Settings Page";
-            }
+            if (active-tab == AppPage.Library): LibraryPage { }
+            if (active-tab == AppPage.Track): TrackPage { }
+            if (active-tab == AppPage.Insights): InsightsPage { }
+            if (active-tab == AppPage.Settings): SettingsPage { }
         }
 
         Rectangle {
