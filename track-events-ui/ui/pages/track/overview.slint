@@ -1,0 +1,70 @@
+import { ScrollView } from "std-widgets.slint";
+import { EventData, EventDataWithChildren } from "../../types.slint";
+import { AppLogic } from "../../logic.slint";
+import { Label } from "../../components/label.slint";
+
+
+export component OverviewComponent inherits ScrollView {
+    in-out  property <int> cols;
+    in-out  property <bool> showing-details;
+
+    GridLayout {
+        padding: 10px;
+        spacing: 12px;
+        for event[i] in AppLogic.events: VerticalLayout {
+            row: Math.floor(i / root.cols);
+            col: Math.mod(i, root.cols);
+            Rectangle {
+                min-height: 64px;
+                background: white;
+                border-radius: 12px;
+                HorizontalLayout {
+                    padding: 12px;
+                    spacing: 12px;
+                    alignment: center;
+                    Image {
+                        source: event.svg-icon;
+                        width: 32px;
+                        height: 32px;
+                        image-fit: contain;
+                        colorize: #4A90E2;
+                    }
+
+                    VerticalLayout {
+                        horizontal-stretch: 1;
+                        Label {
+                            text: event.name;
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #2d3436;
+                            overflow: elide;
+                        }
+
+                        if (!event.has-sub-events): Label {
+                            text: event.event-occurrence;
+                            font-size: 11px;
+                            color: #636e72;
+                        }
+                    }
+
+                    if (event.has-sub-events): Image {
+                        source: @image-url("../../../icons/chevron-right.svg");
+                        width: 16px;
+                        colorize: #b2bec3;
+                    }
+                }
+
+                touch := TouchArea {
+                    clicked => {
+                        if (event.has-sub-events) {
+                            AppLogic.event-details(event.id);
+                            root.showing-details = true;
+                        } else {
+                            AppLogic.event-clicked(event.id);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

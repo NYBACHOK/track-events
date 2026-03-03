@@ -1,0 +1,28 @@
+import { ScrollView } from "std-widgets.slint";
+import { EventData, EventDataWithChildren } from "../../types.slint";
+import { AppLogic } from "../../logic.slint";
+import { Label } from "../../components/label.slint";
+
+import { DetailsComponent } from "details.slint";
+import { OverviewComponent } from "overview.slint";
+
+export component TrackPage inherits Rectangle {
+    private property <bool> showing-details <=> AppLogic.showing-details;
+    private property <EventDataWithChildren> active-details <=> AppLogic.active-details;
+
+    init => {
+        AppLogic.request-events();
+    }
+
+    private property <int> cols: Math.max(1, Math.floor(root.width / 160px));
+
+    if (!showing-details):  OverviewComponent {
+        showing-details <=> root.showing-details;
+        cols <=> root.cols;
+    }
+
+    if (showing-details):  DetailsComponent {
+        showing-details <=> root.showing-details;
+        active-details <=> root.active-details;
+    }
+}
