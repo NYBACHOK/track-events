@@ -40,7 +40,7 @@ pub async fn events(
             (SELECT COUNT(*) FROM events WHERE parent_id = e.id) AS sub_events_count
         FROM events e
         WHERE e.parent_id IS NULL
-        ORDER BY e.name 
+        ORDER BY sub_events_count, e.name
         LIMIT $1 OFFSET $2"#,
     )
     .bind(limit)
