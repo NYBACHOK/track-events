@@ -7,10 +7,22 @@ description = "Habits tracking app"
 
 [dependencies]
 # Enable `gettext` feature if you need localization. Read about localizing slint apps here: https://docs.slint.dev/latest/docs/slint/guide/development/translations/
-slint = { version = "1.14", features = [] }
+slint = { version = "1.14", default-features = false, features = [
+    "std",
+    "compat-1-2",
+    "backend-winit",
+    "renderer-femtovg-wgpu",
+    "renderer-software",
+    "log",
+] }
 time = { version = "0.3", features = ["formatting", "macros", "serde"] }
-tokio = { version = "1.45", features = ["full" ]}
-sqlx = { version = "0.8", features = [ "runtime-tokio", "tls-rustls", "sqlite", "time" ] }
+tokio = { version = "1.45", features = ["full"] }
+sqlx = { version = "0.8", features = [
+    "runtime-tokio",
+    "tls-rustls",
+    "sqlite",
+    "time",
+] }
 anyhow = "*"
 data-encoding = { version = "2.9" }
 serde = { version = "1.0" }

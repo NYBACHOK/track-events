@@ -28,6 +28,8 @@ fn setup_logger() {
             tracing_subscriber::EnvFilter::from_default_env()
                 .add_directive(tracing::Level::DEBUG.into())
                 .add_directive("winit=warn".parse().unwrap())
+                .add_directive("naga=warn".parse().unwrap())
+                .add_directive("wgpu=warn".parse().unwrap())
                 .add_directive("sctk=warn".parse().unwrap())
                 .add_directive("hyper_util=warn".parse().unwrap())
                 .add_directive("reqwest=warn".parse().unwrap()),
