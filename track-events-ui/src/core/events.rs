@@ -62,7 +62,6 @@ impl TryFrom<RawEventWithChildren> for EventDataWithChildren {
         }: RawEventWithChildren,
     ) -> Result<Self, Self::Error> {
         let events = sub_events
-            .0
             .into_iter()
             .filter_map(|this| TryFrom::try_from(this).ok())
             .collect::<Vec<EventData>>();
