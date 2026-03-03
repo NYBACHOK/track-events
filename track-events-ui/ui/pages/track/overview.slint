@@ -11,7 +11,7 @@ export component OverviewComponent inherits ScrollView {
     in-out property <int> cols;
     in-out property <bool> showing-details;
 
-    GridLayout {
+    g := GridLayout {
         padding: Theme.padding;
         spacing: 12px;
         for event[i] in AppLogic.events: VerticalLayout {
@@ -24,7 +24,7 @@ export component OverviewComponent inherits ScrollView {
                 HorizontalLayout {
                     padding: Theme.padding;
                     spacing: 12px;
-                    alignment: center;
+                    alignment: stretch;
                     Image {
                         source: event.svg-icon;
                         width: 32px;
@@ -32,22 +32,21 @@ export component OverviewComponent inherits ScrollView {
                         image-fit: contain;
                         colorize: #4A90E2;
                     }
-                        Label {
-                            text: event.name;
-                            font-size: 14px;
-                            font-weight: 600;
-                            color: #2d3436;
-                            overflow: TextOverflow.clip;
-                        }
 
-                        if (!event.has-sub-events): Badge {
-                            text: event.event-occurrence;
-                            font-size: 11px;
-                            target-component-width <=> event_cell.width;
-                            target-component-height <=> event_cell.height;
-                          
-                        }
-                
+                    Label {
+                        text: event.name;
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: #2d3436;
+                        overflow: TextOverflow.clip;
+                    }
+
+                    if (!event.has-sub-events): Badge {
+                        text: event.event-occurrence;
+                        font-size: 11px;
+                        target-component-width <=> event_cell.width;
+                        target-component-height <=> event_cell.height;
+                    }
 
                     if (event.has-sub-events): Image {
                         source: Icons.chevron-right;
