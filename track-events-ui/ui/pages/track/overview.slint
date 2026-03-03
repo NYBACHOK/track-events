@@ -5,23 +5,24 @@ import { Label } from "../../components/label.slint";
 
 import { Icons } from "../../store.slint";
 import { Badge } from "../../components/badge.slint";
+import { Theme } from "../../theme.slint";
 
 export component OverviewComponent inherits ScrollView {
     in-out property <int> cols;
     in-out property <bool> showing-details;
 
     GridLayout {
-        padding: 10px;
+        padding: Theme.padding;
         spacing: 12px;
         for event[i] in AppLogic.events: VerticalLayout {
             row: Math.floor(i / root.cols);
             col: Math.mod(i, root.cols);
-            Rectangle {
+            event_cell := Rectangle {
                 min-height: 64px;
                 background: white;
                 border-radius: 12px;
                 HorizontalLayout {
-                    padding: 12px;
+                    padding: Theme.padding;
                     spacing: 12px;
                     alignment: center;
                     Image {
@@ -31,9 +32,6 @@ export component OverviewComponent inherits ScrollView {
                         image-fit: contain;
                         colorize: #4A90E2;
                     }
-
-                    VerticalLayout {
-                        horizontal-stretch: 1;
                         Label {
                             text: event.name;
                             font-size: 14px;
@@ -45,8 +43,11 @@ export component OverviewComponent inherits ScrollView {
                         if (!event.has-sub-events): Badge {
                             text: event.event-occurrence;
                             font-size: 11px;
+                            target-component-width <=> event_cell.width;
+                            target-component-height <=> event_cell.height;
+                          
                         }
-                    }
+                
 
                     if (event.has-sub-events): Image {
                         source: Icons.chevron-right;

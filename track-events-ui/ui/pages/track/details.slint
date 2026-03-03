@@ -4,12 +4,13 @@ import { AppLogic } from "../../logic.slint";
 import { Label } from "../../components/label.slint";
 
 import { Icons } from "../../store.slint";
+import { Theme } from "../../theme.slint";
 
 export component DetailsComponent inherits VerticalLayout {
     in-out property <bool> showing-details;
     in-out property <EventDataWithChildren> active-details;
 
-    padding: 10px;
+    padding: Theme.padding;
     spacing: 15px;
 
     HorizontalLayout {
@@ -53,7 +54,7 @@ export component DetailsComponent inherits VerticalLayout {
                 background: white;
                 border-radius: 8px;
                 HorizontalLayout {
-                    padding: 10px;
+                    padding: Theme.padding;
                     spacing: 10px;
                     Image {
                         source: sub-event.svg-icon;
