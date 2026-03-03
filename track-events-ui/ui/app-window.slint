@@ -10,6 +10,8 @@ import {
 } from "pages/pages.slint";
 import { AppLogic } from "logic.slint";
 
+import { Icons } from "store.slint";
+
 export { AppLogic }
 
 enum AppPage { Track, Library, Insights, Settings }
@@ -45,7 +47,7 @@ export component App inherits Window {
                 padding-bottom: 5px;
                 TabItem {
                     text: "Library";
-                    icon: @image-url("../icons/lib.svg");
+                    icon: Icons.lib-tab;
                     active: active-tab == AppPage.Library;
                     clicked => {
                         active-tab = AppPage.Library;
@@ -54,7 +56,7 @@ export component App inherits Window {
 
                 TabItem {
                     text: "Track";
-                    icon: @image-url("../icons/track.svg");
+                    icon: Icons.track-tab;
                     active: active-tab == AppPage.Track;
                     clicked => {
                         active-tab = AppPage.Track;
@@ -63,7 +65,7 @@ export component App inherits Window {
 
                 TabItem {
                     text: "Insights";
-                    icon: @image-url("../icons/stats.svg");
+                    icon: Icons.insights-tab;
                     active: active-tab == AppPage.Insights;
                     clicked => {
                         active-tab = AppPage.Insights;
@@ -72,7 +74,7 @@ export component App inherits Window {
 
                 TabItem {
                     text: "Settings";
-                    icon: @image-url("../icons/gear.svg");
+                    icon: Icons.settings-tab;
                     active: active-tab == AppPage.Settings;
                     clicked => {
                         active-tab = AppPage.Settings;

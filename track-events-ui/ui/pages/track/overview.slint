@@ -3,6 +3,7 @@ import { EventData, EventDataWithChildren } from "../../types.slint";
 import { AppLogic } from "../../logic.slint";
 import { Label } from "../../components/label.slint";
 
+import { Icons } from "../../store.slint";
 
 export component OverviewComponent inherits ScrollView {
     in-out  property <int> cols;
@@ -48,7 +49,7 @@ export component OverviewComponent inherits ScrollView {
                     }
 
                     if (event.has-sub-events): Image {
-                        source: @image-url("../../../icons/chevron-right.svg");
+                        source: Icons.chevron-right;
                         width: 16px;
                         colorize: #b2bec3;
                     }

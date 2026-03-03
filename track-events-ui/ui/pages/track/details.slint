@@ -3,6 +3,8 @@ import { EventData, EventDataWithChildren } from "../../types.slint";
 import { AppLogic } from "../../logic.slint";
 import { Label } from "../../components/label.slint";
 
+import { Icons } from "../../store.slint";
+
 export component DetailsComponent inherits VerticalLayout {
     in-out property <bool> showing-details;
     in-out property <EventDataWithChildren> active-details;
@@ -28,7 +30,7 @@ export component DetailsComponent inherits VerticalLayout {
                 HorizontalLayout {
                     spacing: 5px;
                     Image {
-                        source: @image-url("../../../icons/arrow-left.svg");
+                        source: Icons.arrow-left;
                         width: 16px;
                         colorize: #4A90E2;
                     }
