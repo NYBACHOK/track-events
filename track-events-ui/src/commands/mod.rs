@@ -22,4 +22,12 @@ pub fn handle_commands(app: App, app_tx: UnboundedSender<Commands>) {
             let _ = app_tx.send(Commands::Events(EventCommands::Clicked(id as u32)));
         }
     });
+
+    app.global::<AppLogic>().on_event_details({
+        let app_tx = app_tx.clone();
+
+        move |id| {
+            let _ = app_tx.send(Commands::Events(EventCommands::Details(id as u32)));
+        }
+    });
 }

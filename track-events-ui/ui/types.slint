@@ -1,3 +1,17 @@
-export struct EventData { id: int, name: string, icon: image, occurrence_count: int}
+export struct EventData {
+    id: int,
+    name: string,
+    svg-icon: image,
+    user-enabled: bool,
+    event-occurrence: int,
+    has-sub-events : bool
+}
 
- 
+export struct EventDataWithChildren {
+    id: int,
+    name: string,
+    svg-icon: image,
+    user-enabled: bool,
+    event-occurrence: int,
+    sub-events: [EventData],
+}

@@ -1,15 +1,19 @@
 CREATE TABLE events (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE,
-    svg_icon TEXT,
+    svg_icon TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     edited_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    sub_event_id INTEGER
+    user_enabled BOOLEAN NOT NULL DEFAULT true,
+
+    parent_id INTEGER NULL,
+    FOREIGN KEY(parent_id) REFERENCES events(id)
 );
 
 CREATE TABLE event_occurs (
-    id INTEGER PRIMARY KEY,
-    event_id INTEGER REFERENCES events(id),
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_id INTEGER NOT NULL,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+
     FOREIGN KEY(event_id) REFERENCES events(id)
 );

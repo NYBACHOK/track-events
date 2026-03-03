@@ -1,9 +1,12 @@
-import { EventData } from "types.slint";
+import { EventData, EventDataWithChildren } from "types.slint";
 
 export global AppLogic {
     in property <[EventData]> events;
-    
     callback event-clicked(int);
     callback request-events();
 
+    callback event-details(int);
+
+    in property <bool> showing-details: false;
+    in property <EventDataWithChildren> active-details;
 }
