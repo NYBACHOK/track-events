@@ -1,6 +1,8 @@
 import { EventData, EventDataWithChildren } from "types.slint";
 
 export global AppLogic {
+    in property <bool> is-dark : false;
+
     in property <[EventData]> events;
     callback event-clicked(int);
     callback request-events();
