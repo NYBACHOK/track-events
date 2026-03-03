@@ -4,10 +4,11 @@ import { AppLogic } from "../../logic.slint";
 import { Label } from "../../components/label.slint";
 
 import { Icons } from "../../store.slint";
+import { Badge } from "../../components/badge.slint";
 
 export component OverviewComponent inherits ScrollView {
-    in-out  property <int> cols;
-    in-out  property <bool> showing-details;
+    in-out property <int> cols;
+    in-out property <bool> showing-details;
 
     GridLayout {
         padding: 10px;
@@ -38,13 +39,12 @@ export component OverviewComponent inherits ScrollView {
                             font-size: 14px;
                             font-weight: 600;
                             color: #2d3436;
-                            overflow: elide;
+                            overflow: TextOverflow.clip;
                         }
 
-                        if (!event.has-sub-events): Label {
+                        if (!event.has-sub-events): Badge {
                             text: event.event-occurrence;
                             font-size: 11px;
-                            color: #636e72;
                         }
                     }
 

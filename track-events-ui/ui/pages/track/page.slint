@@ -14,11 +14,12 @@ export component TrackPage inherits Rectangle {
         AppLogic.request-events();
     }
 
-    private property <int> cols: Math.max(1, Math.floor(root.width / 160px));
+    private property <int> cols: Math.max(1, Math.floor((root.width - 20px) / 172px));
 
     if (!showing-details):  OverviewComponent {
         showing-details <=> root.showing-details;
         cols <=> root.cols;
+        width <=> parent.width;
     }
 
     if (showing-details):  DetailsComponent {
