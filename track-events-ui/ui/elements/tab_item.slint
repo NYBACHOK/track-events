@@ -1,0 +1,30 @@
+export component TabItem inherits Rectangle {
+    in property <string> text;
+    in property <image> icon;
+    in property <bool> active;
+    callback clicked;
+
+    VerticalLayout {
+        spacing: 2px;
+        alignment: center;
+        Image {
+            source: icon;
+            height: 24px;
+            colorize: active ? #4A90E2 : #999;
+            animate colorize { duration: 150ms; }
+        }
+
+        Text {
+            text: text;
+            horizontal-alignment: center;
+            font-size: 10px;
+            color: active ? #4A90E2 : #999;
+        }
+    }
+
+    TouchArea {
+        clicked => {
+            root.clicked();
+        }
+    }
+}

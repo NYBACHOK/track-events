@@ -1,86 +1,89 @@
 import { ScrollView, VerticalBox } from "std-widgets.slint";
 
-struct EventData {
-    id : int,
-    name: string,
-    icon: image,
-    occurrence_count : int,
-}
+import { EventData } from "types.slint";
+
+import { TabItem } from "elements/tab_item.slint";
+ 
+import { TrackPage } from "pages/track.slint";
+
+  enum AppPage { Library, Track, Insights, Settings }
 
 export component App inherits Window {
     min-width: 320px;
     min-height: 400px;
     preferred-width: 500px;
     preferred-height: 600px;
-    title: "Event Viewer";
+    title: "Event Tracker";
     background: #f4f4f9;
-
     in property <[EventData]> events;
     callback event-clicked(int);
     callback request-events();
-    
-    // Dynamic Column Calculation
-    // We adjust the columns based on the window width
-    private property <int> cols: Math.max(1, Math.floor(root.width / 160px));
 
-    ScrollView {
+    // Navigation State (Default to index 1: Track)
+    private property <AppPage> active-tab: AppPage.Track;
 
-        GridLayout { 
-            padding: 10px;
-            spacing: 12px;
+    VerticalLayout {
+        Rectangle {
+            vertical-stretch: 1;
+            if (active-tab == AppPage.Library): Text {
+                text: "Library Page";
+            }
+            if (active-tab == AppPage.Track): TrackPage {
+                events: root.events;
+                event-clicked(id) => {
+                    root.event-clicked(id)
+                }
+            }
+            if (active-tab == AppPage.Insights): Text {
+                text: "Insights Page";
+            }
+            if (active-tab == AppPage.Settings): Text {
+                text: "Settings Page";
+            }
+        }
 
-            for event[i] in root.events: VerticalLayout {
-                row: Math.floor(i / root.cols);
-                col: Math.mod(i, root.cols);
-                Rectangle {
-                    min-height: 64px;
-                    background: white;
-                    border-radius: 12px; // Slightly rounder for modern look
-                    drop-shadow-blur: 6px;
-                    drop-shadow-color: #00000010;
+        Rectangle {
+            height: 65px;
+            background: white;
+            border-color: #e0e0e0;
+            border-width: 1px;
 
-                    HorizontalLayout {
-                        padding: 12px;
-                        spacing: 12px;
-
-                        Image {
-                            source: event.icon;
-                            width: 32px;
-                            height: 32px;
-                            image-fit: contain;
-                            colorize: #4A90E2;
-                        }
-
-                        VerticalLayout {
-                            alignment: center;
-                            Text {
-                                text: event.name;
-                                font-size: 14px;
-                                font-weight: 600;
-                                color: #2d3436;
-                                overflow: elide;
-                            }
-
-                            Text {
-                                text: event.occurrence_count;
-                                font-size: 11px;
-                                color: #636e72;
-                            }
-                        }
+            HorizontalLayout {
+                padding-top: 5px;
+                padding-bottom: 5px;
+                TabItem {
+                    text: "Library";
+                    icon: @image-url("../icons/lib.svg");
+                    active: active-tab == AppPage.Library;
+                    clicked => {
+                        active-tab = AppPage.Library;
                     }
+                }
 
-                    states [
-                        hover when touch.has-hover: {
-                            background: #f8f9fa;
-                        }
-                        pressed when touch.pressed: {
-                            background: #e9ecef;
-                        }
-                    ]
-                    touch := TouchArea {
-                        clicked => {
-                            root.event-clicked(event.id);
-                        }
+                TabItem {
+                    text: "Track";
+                    icon: @image-url("../icons/track.svg");
+                    active: active-tab == AppPage.Track;
+                    clicked => {
+                        active-tab = AppPage.Track;
+                    }
+                }
+
+                TabItem {
+                    text: "Insights";
+                    icon: @image-url("../icons/stats.svg");
+                    active: active-tab == AppPage.Insights;
+                    clicked => {
+                        active-tab = AppPage.Insights;
+                    }
+                }
+
+                TabItem {
+                    text: "Settings";
+                    icon: @image-url("../icons/gear.svg");
+                    active: active-tab == AppPage.Settings;
+                    clicked => {
+                        active-tab = AppPage.Settings;
                     }
                 }
             }
