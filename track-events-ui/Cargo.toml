@@ -7,7 +7,7 @@ description = "Habits tracking app"
 
 [dependencies]
 # Enable `gettext` feature if you need localization. Read about localizing slint apps here: https://docs.slint.dev/latest/docs/slint/guide/development/translations/
-slint = { version = "1.14", default-features = false, features = [
+slint = { version = "1.15", default-features = false, features = [
     "std",
     "compat-1-2",
     "backend-winit",
