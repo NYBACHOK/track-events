@@ -25,8 +25,16 @@ fn setup_logger() {
     tracing_subscriber::registry()
         .with(tracing_subscriber::fmt::layer())
         .with(
-            tracing_subscriber::EnvFilter::from_default_env()
-                .add_directive(tracing::Level::DEBUG.into())
+            tracing_subscriber::EnvFilter::builder()
+                .with_default_directive(
+                    match cfg!(debug_assertions) {
+                        true => tracing::Level::DEBUG,
+                        false => tracing::Level::INFO,
+                    }
+                    .into(),
+                )
+                .from_env()
+                .expect("default level is set")
                 .add_directive("winit=warn".parse().unwrap())
                 .add_directive("naga=warn".parse().unwrap())
                 .add_directive("wgpu=warn".parse().unwrap())
